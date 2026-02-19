@@ -1,65 +1,201 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { Lang } from "@/lib/i18n";
+import {
+  getCurrentStatus,
+  getRozaNumber,
+  getTodaySchedule,
+  getDistrictsFlat,
+  District,
+} from "@/lib/timings";
+import Header from "@/components/Header";
+import StatusBanner from "@/components/StatusBanner";
+import CountdownTimer from "@/components/CountdownTimer";
+import TimeCard from "@/components/TimeCard";
+import DistrictSelector from "@/components/DistrictSelector";
+import DuaCard from "@/components/DuaCard";
+import QuranHadithLinks from "@/components/QuranHadithLinks";
+import ScheduleTable from "@/components/ScheduleTable";
+import Footer from "@/components/Footer";
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+  // ─── State ───
+  const [lang, setLang] = useState<Lang>("bn");
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [selectedDistrict, setSelectedDistrict] = useState<District>(() => {
+    const districts = getDistrictsFlat();
+    return districts.find((d) => d.district === "Dhaka") ?? districts[0];
+  });
+  const [mounted, setMounted] = useState(false);
+
+  // ─── Hydration & localStorage ───
+  useEffect(() => {
+    // Load saved preferences
+    const savedLang = localStorage.getItem("rb_lang") as Lang | null;
+    const savedTheme = localStorage.getItem("rb_theme") as
+      | "light"
+      | "dark"
+      | null;
+    const savedDistrict = localStorage.getItem("rb_district");
+
+    if (savedLang) setLang(savedLang);
+    if (savedTheme) setTheme(savedTheme);
+    if (savedDistrict) {
+      const districts = getDistrictsFlat();
+      const found = districts.find((d) => d.district === savedDistrict);
+      if (found) setSelectedDistrict(found);
+    }
+
+    setMounted(true);
+  }, []);
+
+  // ─── Persist preferences ───
+  useEffect(() => {
+    if (!mounted) return;
+    localStorage.setItem("rb_lang", lang);
+  }, [lang, mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    localStorage.setItem("rb_theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme, mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    localStorage.setItem("rb_district", selectedDistrict.district);
+  }, [selectedDistrict, mounted]);
+
+  // ─── Handlers ───
+  const handleSetLang = useCallback((l: Lang) => setLang(l), []);
+  const handleSetTheme = useCallback(
+    (t: "light" | "dark") => setTheme(t),
+    []
+  );
+  const handleSelectDistrict = useCallback(
+    (d: District) => setSelectedDistrict(d),
+    []
+  );
+
+  // ─── Derived state ───
+  const status = getCurrentStatus(selectedDistrict.offset);
+  const rozaNumber = getRozaNumber();
+  const todaySchedule = getTodaySchedule(selectedDistrict.offset);
+
+  // Use fallback times if not a Ramadan day (use day 1 for preview)
+  const sehriTime = todaySchedule?.adjustedSehri ?? "05:12";
+  const iftarTime = todaySchedule?.adjustedIftar ?? "17:58";
+
+  // ─── Prevent flash before hydration ───
+  if (!mounted) {
+    return (
+      <div
+        style={{
+          minHeight: "100dvh",
+          background: "#0c1222",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            animation: "fadeIn 0.5s ease-out",
+          }}
+        >
+          <span style={{ fontSize: 48 }}>🌙</span>
+          <p
+            style={{
+              color: "#a7f3d0",
+              marginTop: 12,
+              fontSize: 14,
+              fontWeight: 600,
+            }}
+          >
+            Ramadan Buddy
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <Header
+        lang={lang}
+        setLang={handleSetLang}
+        theme={theme}
+        setTheme={handleSetTheme}
+      />
+
+      <main className="app-container" style={{ paddingBottom: 24 }}>
+        {/* Section gaps via vertical flex */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
+            paddingTop: 20,
+          }}
+        >
+          {/* 1. District Selector */}
+          <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.05s", animationFillMode: "forwards" }}>
+            <DistrictSelector
+              selectedDistrict={selectedDistrict.district}
+              onSelect={handleSelectDistrict}
+              lang={lang}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </section>
+
+          {/* 2. Status Banner */}
+          <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.1s", animationFillMode: "forwards" }}>
+            <StatusBanner
+              status={status}
+              rozaNumber={rozaNumber}
+              lang={lang}
+            />
+          </section>
+
+          {/* 3. Countdown Timer */}
+          <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.2s", animationFillMode: "forwards" }}>
+            <CountdownTimer
+              offsetMinutes={selectedDistrict.offset}
+              lang={lang}
+            />
+          </section>
+
+          {/* 4. Time Cards */}
+          <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.3s", animationFillMode: "forwards" }}>
+            <TimeCard
+              sehriTime={sehriTime}
+              iftarTime={iftarTime}
+              lang={lang}
+            />
+          </section>
+
+          {/* 5. Duas */}
+          <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.4s", animationFillMode: "forwards" }}>
+            <DuaCard lang={lang} />
+          </section>
+
+          {/* 6. Schedule Table */}
+          <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.5s", animationFillMode: "forwards" }}>
+            <ScheduleTable
+              offsetMinutes={selectedDistrict.offset}
+              lang={lang}
+            />
+          </section>
+
+          {/* 7. Quran & Hadith Links */}
+          <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.6s", animationFillMode: "forwards" }}>
+            <QuranHadithLinks lang={lang} />
+          </section>
         </div>
+
+        <Footer lang={lang} />
       </main>
-    </div>
+    </>
   );
 }
