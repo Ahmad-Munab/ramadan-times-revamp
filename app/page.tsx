@@ -142,7 +142,7 @@ export default function Home() {
           }}
         >
           {/* 1. District Selector */}
-          <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.05s", animationFillMode: "forwards" }}>
+          <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.05s", animationFillMode: "forwards", position: "relative", zIndex: 100 }}>
             <DistrictSelector
               selectedDistrict={selectedDistrict.district}
               onSelect={handleSelectDistrict}
