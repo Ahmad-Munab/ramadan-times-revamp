@@ -10,39 +10,97 @@ export default function Footer({ lang }: FooterProps) {
     return (
         <footer
             style={{
+                marginTop: 28,
+                borderRadius: "var(--radius-xl)",
+                background: "var(--bg-glass)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                border: "1px solid var(--border-color)",
+                padding: "24px 20px",
                 textAlign: "center",
-                padding: "32px 16px 24px",
-                borderTop: "1px solid var(--divider)",
             }}
         >
+            {/* Data source info */}
+            <div style={{ marginBottom: 16 }}>
+                <p
+                    style={{
+                        fontSize: 11,
+                        color: "var(--text-muted)",
+                        fontWeight: 500,
+                        marginBottom: 4,
+                    }}
+                >
+                    {t("data_source", lang)}
+                </p>
+                <p
+                    style={{
+                        fontSize: 11,
+                        color: "var(--text-muted)",
+                        fontWeight: 500,
+                    }}
+                >
+                    {t("ramadan_year", lang)}
+                </p>
+            </div>
+
+            {/* Divider */}
+            <div
+                style={{
+                    height: 1,
+                    background: "var(--divider)",
+                    margin: "0 auto 16px",
+                    maxWidth: 200,
+                }}
+            />
+
+            {/* Made with love */}
+            <p
+                style={{
+                    fontSize: 13,
+                    color: "var(--text-secondary)",
+                    marginBottom: 8,
+                    fontWeight: 500,
+                }}
+            >
+                Made with{" "}
+                <span style={{ color: "#ef4444" }}>❤️</span>{" "}
+                by{" "}
+                <a
+                    href="https://munab.ascendralabs.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        color: "var(--accent)",
+                        fontWeight: 700,
+                        textDecoration: "none",
+                    }}
+                >
+                    Munab
+                </a>
+            </p>
+
+            {/* Copyright */}
             <p
                 style={{
                     fontSize: 11,
                     color: "var(--text-muted)",
-                    fontWeight: 500,
-                    marginBottom: 4,
+                    opacity: 0.8,
                 }}
             >
-                {t("data_source", lang)}
-            </p>
-            <p
-                style={{
-                    fontSize: 11,
-                    color: "var(--text-muted)",
-                    fontWeight: 500,
-                    marginBottom: 12,
-                }}
-            >
-                {t("ramadan_year", lang)}
-            </p>
-            <p
-                style={{
-                    fontSize: 10,
-                    color: "var(--text-muted)",
-                    opacity: 0.6,
-                }}
-            >
-                Made with ❤️ for the Ummah
+                © 2026{" "}
+                <a
+                    href="https://ascendralabs.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        color: "var(--text-muted)",
+                        textDecoration: "none",
+                        fontWeight: 700,
+                    }}
+                >
+                    Ascendra Labs
+                </a>
+                . All rights reserved.
             </p>
         </footer>
     );

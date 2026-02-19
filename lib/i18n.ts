@@ -2,8 +2,8 @@ export type Lang = "en" | "bn";
 
 const translations: Record<string, Record<Lang, string>> = {
     // ─── App ───
-    app_name: { en: "Ramadan Buddy", bn: "রমজান বাডি" },
-    app_tagline: { en: "Your Ramadan Companion", bn: "আপনার রমজানের সঙ্গী" },
+    app_name: { en: "Ramadan Daily", bn: "রমজান ডেইলি" },
+    app_tagline: { en: "Your Daily Ramadan Companion", bn: "আপনার দৈনিক রমজান সঙ্গী" },
 
     // ─── Status ───
     status_before_ramadan: { en: "Ramadan is approaching", bn: "রমজান আসছে" },

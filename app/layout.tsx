@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ramadan Buddy — রমজান বাডি | Sehri & Iftar Times Bangladesh 2026",
+  title: "Ramadan Daily — রমজান ডেইলি | Sehri & Iftar Times Bangladesh 2026",
   description:
-    "Your Ramadan companion for Bangladesh — accurate Sehri & Iftar times for all 64 districts, live countdown, duas, Azan notification. সেহরি ও ইফতারের সময়সূচি ২০২৬।",
+    "Your daily Ramadan companion for Bangladesh — accurate Sehri & Iftar times for all 64 districts, live countdown, duas, Azan notification. সেহরি ও ইফতারের সময়সূচি ২০২৬।",
   keywords: [
     "Ramadan",
     "Sehri times",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     "prayer times",
   ],
   openGraph: {
-    title: "Ramadan Buddy — Sehri & Iftar Times Bangladesh 2026",
+    title: "Ramadan Daily — Sehri & Iftar Times Bangladesh 2026",
     description:
       "Accurate Sehri & Iftar times for all 64 districts of Bangladesh with live countdown, duas, and Azan notification.",
     type: "website",
@@ -53,7 +53,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=DM+Sans:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
       </head>

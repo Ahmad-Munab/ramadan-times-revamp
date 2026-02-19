@@ -105,16 +105,17 @@ export default function Home() {
             animation: "fadeIn 0.5s ease-out",
           }}
         >
-          <span style={{ fontSize: 48 }}>🌙</span>
+          <span style={{ fontSize: 44 }}>🌙</span>
           <p
             style={{
               color: "#a7f3d0",
               marginTop: 12,
               fontSize: 14,
               fontWeight: 600,
+              letterSpacing: "0.02em",
             }}
           >
-            Ramadan Buddy
+            Ramadan Daily
           </p>
         </div>
       </div>
@@ -130,14 +131,14 @@ export default function Home() {
         setTheme={handleSetTheme}
       />
 
-      <main className="app-container" style={{ paddingBottom: 24 }}>
+      <main className="app-container" style={{ paddingBottom: 32 }}>
         {/* Section gaps via vertical flex */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 20,
-            paddingTop: 20,
+            gap: 24,
+            paddingTop: 24,
           }}
         >
           {/* 1. District Selector */}

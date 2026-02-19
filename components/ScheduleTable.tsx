@@ -36,7 +36,7 @@ export default function ScheduleTable({
                 onClick={() => setIsOpen(!isOpen)}
                 style={{
                     width: "100%",
-                    padding: "14px 20px",
+                    padding: "14px 18px",
                     borderRadius: "var(--radius-lg)",
                     border: "1px solid var(--border-color)",
                     background: "var(--bg-card)",
@@ -53,116 +53,139 @@ export default function ScheduleTable({
                 }}
             >
                 <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 18 }}>📅</span>
+                    {/* Calendar SVG icon */}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--accent)" }}>
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
                     {isOpen ? t("hide_schedule", lang) : t("show_schedule", lang)}
                 </span>
-                <span
+                <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     style={{
+                        color: "var(--text-muted)",
                         transform: isOpen ? "rotate(180deg)" : "rotate(0)",
-                        transition: "transform 0.2s ease",
+                        transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                 >
-                    ▾
-                </span>
+                    <polyline points="6 9 12 15 18 9" />
+                </svg>
             </button>
 
-            {isOpen && (
-                <div
-                    className="animate-fade-in glass-card"
-                    style={{
-                        marginTop: 12,
-                        overflow: "hidden",
-                    }}
-                >
+            {/* Smooth Accordion */}
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateRows: isOpen ? "1fr" : "0fr",
+                    opacity: isOpen ? 1 : 0,
+                    transition: "grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease",
+                    marginTop: isOpen ? 10 : 0,
+                }}
+            >
+                <div style={{ overflow: "hidden" }}>
                     <div
-                        style={{
-                            overflowX: "auto",
-                            WebkitOverflowScrolling: "touch",
-                        }}
+                        className="glass-card"
+                        style={{ overflow: "hidden" }}
                     >
-                        <table
+                        <div
                             style={{
-                                width: "100%",
-                                borderCollapse: "collapse",
-                                fontSize: 13,
+                                overflowX: "auto",
+                                WebkitOverflowScrolling: "touch",
                             }}
                         >
-                            <thead>
-                                <tr
-                                    style={{
-                                        borderBottom: "2px solid var(--border-color)",
-                                    }}
-                                >
-                                    <th style={thStyle}>#</th>
-                                    <th style={{ ...thStyle, textAlign: "left" }}>
-                                        {t("date", lang)}
-                                    </th>
-                                    <th style={thStyle}>{t("sehri_col", lang)}</th>
-                                    <th style={thStyle}>{t("iftar_col", lang)}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {schedule.map((day, idx) => {
-                                    const isToday = idx === todayIdx;
-                                    return (
-                                        <tr
-                                            key={day.roza}
-                                            style={{
-                                                background: isToday
-                                                    ? "var(--accent)"
-                                                    : idx % 2 === 0
-                                                        ? "transparent"
-                                                        : "var(--bg-secondary)",
-                                                color: isToday ? "#fff" : "var(--text-primary)",
-                                                borderBottom: "1px solid var(--divider)",
-                                                transition: "background 0.2s",
-                                            }}
-                                        >
-                                            <td style={{ ...tdStyle, fontWeight: 700 }}>
-                                                {localizeNumber(day.roza, lang)}
-                                            </td>
-                                            <td style={{ ...tdStyle, textAlign: "left" }}>
-                                                <span style={{ fontWeight: 600 }}>
-                                                    {localizeNumber(day.date.slice(5), lang)}
-                                                </span>
-                                                <span
-                                                    style={{
-                                                        fontSize: 11,
-                                                        opacity: 0.7,
-                                                        marginLeft: 6,
-                                                    }}
-                                                >
-                                                    {dayNames[day.day]?.[lang] ?? day.day}
-                                                </span>
-                                                {isToday && (
+                            <table
+                                style={{
+                                    width: "100%",
+                                    borderCollapse: "collapse",
+                                    fontSize: 13,
+                                }}
+                            >
+                                <thead>
+                                    <tr
+                                        style={{
+                                            borderBottom: "2px solid var(--border-color)",
+                                        }}
+                                    >
+                                        <th style={thStyle}>#</th>
+                                        <th style={{ ...thStyle, textAlign: "left" }}>
+                                            {t("date", lang)}
+                                        </th>
+                                        <th style={thStyle}>{t("sehri_col", lang)}</th>
+                                        <th style={thStyle}>{t("iftar_col", lang)}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {schedule.map((day, idx) => {
+                                        const isToday = idx === todayIdx;
+                                        return (
+                                            <tr
+                                                key={day.roza}
+                                                style={{
+                                                    background: isToday
+                                                        ? "var(--accent)"
+                                                        : idx % 2 === 0
+                                                            ? "transparent"
+                                                            : "var(--bg-secondary)",
+                                                    color: isToday ? "#fff" : "var(--text-primary)",
+                                                    borderBottom: "1px solid var(--divider)",
+                                                    transition: "background 0.2s",
+                                                }}
+                                            >
+                                                <td style={{ ...tdStyle, fontWeight: 700 }}>
+                                                    {localizeNumber(day.roza, lang)}
+                                                </td>
+                                                <td style={{ ...tdStyle, textAlign: "left" }}>
+                                                    <span style={{ fontWeight: 600 }}>
+                                                        {localizeNumber(day.date.slice(5), lang)}
+                                                    </span>
                                                     <span
                                                         style={{
-                                                            fontSize: 9,
-                                                            background: "rgba(255,255,255,0.25)",
-                                                            padding: "2px 6px",
-                                                            borderRadius: "var(--radius-full)",
+                                                            fontSize: 11,
+                                                            opacity: 0.7,
                                                             marginLeft: 6,
-                                                            fontWeight: 700,
                                                         }}
                                                     >
-                                                        {t("today", lang)}
+                                                        {dayNames[day.day]?.[lang] ?? day.day}
                                                     </span>
-                                                )}
-                                            </td>
-                                            <td style={tdStyle}>
-                                                {localizeTime(day.adjustedSehri, lang)}
-                                            </td>
-                                            <td style={tdStyle}>
-                                                {localizeTime(day.adjustedIftar, lang)}
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                                                    {isToday && (
+                                                        <span
+                                                            style={{
+                                                                fontSize: 9,
+                                                                background: "rgba(255,255,255,0.25)",
+                                                                padding: "2px 6px",
+                                                                borderRadius: "var(--radius-full)",
+                                                                marginLeft: 6,
+                                                                fontWeight: 700,
+                                                            }}
+                                                        >
+                                                            {t("today", lang)}
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td style={tdStyle}>
+                                                    {localizeTime(day.adjustedSehri, lang)}
+                                                </td>
+                                                <td style={tdStyle}>
+                                                    {localizeTime(day.adjustedIftar, lang)}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }

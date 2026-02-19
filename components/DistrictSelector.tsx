@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Lang, t } from "@/lib/i18n";
 import { getDistrictsByDivision, District } from "@/lib/timings";
 
@@ -17,6 +17,8 @@ export default function DistrictSelector({
 }: DistrictSelectorProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState("");
+    const containerRef = useRef<HTMLDivElement>(null);
+    const searchRef = useRef<HTMLInputElement>(null);
     const divisions = useMemo(() => getDistrictsByDivision(), []);
 
     const filteredDivisions = useMemo(() => {
@@ -34,8 +36,41 @@ export default function DistrictSelector({
         return result;
     }, [search, divisions]);
 
+    // Focus input when opened
+    useEffect(() => {
+        if (isOpen && searchRef.current) {
+            setTimeout(() => searchRef.current?.focus(), 50);
+        }
+    }, [isOpen]);
+
+    // Close on outside click
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleClick = (e: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+                setIsOpen(false);
+                setSearch("");
+            }
+        };
+        document.addEventListener("mousedown", handleClick);
+        return () => document.removeEventListener("mousedown", handleClick);
+    }, [isOpen]);
+
+    // Close on Escape
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setIsOpen(false);
+                setSearch("");
+            }
+        };
+        document.addEventListener("keydown", handleKey);
+        return () => document.removeEventListener("keydown", handleKey);
+    }, [isOpen]);
+
     return (
-        <div style={{ position: "relative" }}>
+        <div ref={containerRef} style={{ position: "relative", zIndex: 100 }}>
             {/* Trigger */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -53,54 +88,67 @@ export default function DistrictSelector({
                     fontSize: 14,
                     fontWeight: 600,
                     transition: "all 0.2s ease",
-                    boxShadow: "var(--shadow-sm)",
+                    boxShadow: isOpen ? "var(--shadow-md)" : "var(--shadow-sm)",
+                    fontFamily: "inherit",
                 }}
             >
                 <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 18 }}>📍</span>
+                    {/* Location SVG icon */}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--accent)" }}>
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                    </svg>
                     <span>
-                        {selectedDistrict} • {t("your_location", lang)}
+                        {selectedDistrict} · {t("your_location", lang)}
                     </span>
                 </span>
-                <span
+                <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     style={{
+                        color: "var(--text-muted)",
                         transform: isOpen ? "rotate(180deg)" : "rotate(0)",
-                        transition: "transform 0.2s ease",
-                        fontSize: 14,
+                        transition: "transform 0.25s ease",
                     }}
                 >
-                    ▾
-                </span>
+                    <polyline points="6 9 12 15 18 9" />
+                </svg>
             </button>
 
-            {/* Dropdown */}
+            {/* Dropdown — conditionally rendered for reliability */}
             {isOpen && (
                 <div
-                    className="animate-fade-in"
                     style={{
                         position: "absolute",
-                        top: "calc(100% + 8px)",
+                        top: "calc(100% + 6px)",
                         left: 0,
                         right: 0,
                         background: "var(--bg-card)",
                         border: "1px solid var(--border-color)",
                         borderRadius: "var(--radius-lg)",
                         boxShadow: "var(--shadow-lg)",
-                        maxHeight: 360,
+                        maxHeight: 380,
                         overflow: "hidden",
                         display: "flex",
                         flexDirection: "column",
-                        zIndex: 100,
+                        zIndex: 9999,
+                        animation: "slideDown 0.2s ease-out",
                     }}
                 >
                     {/* Search */}
                     <div style={{ padding: "12px 12px 8px" }}>
                         <input
+                            ref={searchRef}
                             type="text"
                             placeholder={t("search_district", lang)}
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            autoFocus
                             style={{
                                 width: "100%",
                                 padding: "10px 14px",
@@ -124,7 +172,7 @@ export default function DistrictSelector({
                         }}
                     >
                         {Object.entries(filteredDivisions).map(([divName, districts]) => (
-                            <div key={divName} style={{ marginBottom: 8 }}>
+                            <div key={divName} style={{ marginBottom: 6 }}>
                                 <p
                                     style={{
                                         fontSize: 10,
@@ -147,7 +195,7 @@ export default function DistrictSelector({
                                         }}
                                         style={{
                                             width: "100%",
-                                            padding: "10px 12px",
+                                            padding: "9px 12px",
                                             borderRadius: "var(--radius-md)",
                                             border: "none",
                                             background:
@@ -185,21 +233,6 @@ export default function DistrictSelector({
                         ))}
                     </div>
                 </div>
-            )}
-
-            {/* Backdrop */}
-            {isOpen && (
-                <div
-                    onClick={() => {
-                        setIsOpen(false);
-                        setSearch("");
-                    }}
-                    style={{
-                        position: "fixed",
-                        inset: 0,
-                        zIndex: 99,
-                    }}
-                />
             )}
         </div>
     );

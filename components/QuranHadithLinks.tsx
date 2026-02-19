@@ -6,7 +6,7 @@ interface LinkItem {
     title_key: string;
     desc_key: string;
     url: string;
-    icon: string;
+    iconType: "quran" | "hadith";
     color: string;
 }
 
@@ -15,17 +15,37 @@ const links: LinkItem[] = [
         title_key: "read_quran",
         desc_key: "quran_desc",
         url: "https://quran.com",
-        icon: "📖",
+        iconType: "quran",
         color: "linear-gradient(135deg, #059669, #047857)",
     },
     {
         title_key: "read_hadith",
         desc_key: "hadith_desc",
         url: "https://sunnah.com",
-        icon: "📚",
+        iconType: "hadith",
         color: "linear-gradient(135deg, #d97706, #b45309)",
     },
 ];
+
+function LinkIcon({ type }: { type: "quran" | "hadith" }) {
+    if (type === "quran") {
+        return (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg>
+        );
+    }
+    return (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            <line x1="9" y1="7" x2="16" y2="7" />
+            <line x1="9" y1="11" x2="16" y2="11" />
+            <line x1="9" y1="15" x2="13" y2="15" />
+        </svg>
+    );
+}
 
 interface QuranHadithLinksProps {
     lang: Lang;
@@ -36,16 +56,15 @@ export default function QuranHadithLinks({ lang }: QuranHadithLinksProps) {
         <div>
             <h2
                 style={{
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: 800,
                     color: "var(--text-primary)",
-                    marginBottom: 12,
+                    marginBottom: 10,
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
                 }}
             >
-                <span>📖</span>
                 {t("quran_hadith", lang)}
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -57,10 +76,10 @@ export default function QuranHadithLinks({ lang }: QuranHadithLinksProps) {
                         rel="noopener noreferrer"
                         className="glass-card"
                         style={{
-                            padding: "16px 20px",
+                            padding: "14px 18px",
                             display: "flex",
                             alignItems: "center",
-                            gap: 16,
+                            gap: 14,
                             textDecoration: "none",
                             color: "var(--text-primary)",
                             transition: "all 0.2s ease",
@@ -68,18 +87,17 @@ export default function QuranHadithLinks({ lang }: QuranHadithLinksProps) {
                     >
                         <div
                             style={{
-                                width: 44,
-                                height: 44,
+                                width: 42,
+                                height: 42,
                                 borderRadius: "var(--radius-md)",
                                 background: link.color,
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                fontSize: 22,
                                 flexShrink: 0,
                             }}
                         >
-                            {link.icon}
+                            <LinkIcon type={link.iconType} />
                         </div>
                         <div style={{ flex: 1 }}>
                             <p
@@ -100,15 +118,19 @@ export default function QuranHadithLinks({ lang }: QuranHadithLinksProps) {
                                 {t(link.desc_key, lang)}
                             </p>
                         </div>
-                        <span
-                            style={{
-                                fontSize: 18,
-                                color: "var(--text-muted)",
-                                opacity: 0.5,
-                            }}
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            style={{ color: "var(--text-muted)", opacity: 0.5, flexShrink: 0 }}
                         >
-                            →
-                        </span>
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
                     </a>
                 ))}
             </div>

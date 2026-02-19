@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════
-   RAMADAN BUDDY — "Emerald Minaret" Design System
+   RAMADAN DAILY — "Emerald Minaret" Design System
    ═══════════════════════════════════════════════ */
 
 @theme {
@@ -33,7 +33,7 @@
   --color-twilight-500: #334155;
 
   /* ─── Fonts ─── */
-  --font-sans: "Plus Jakarta Sans", "Noto Sans Bengali", sans-serif;
+  --font-sans: "DM Sans", "Noto Sans Bengali", sans-serif;
   --font-arabic: "Amiri", serif;
   --font-bengali: "Noto Sans Bengali", sans-serif;
 }
@@ -48,10 +48,10 @@
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
   --bg-card-hover: #f0fdf4;
-  --bg-glass: rgba(255, 255, 255, 0.75);
-  --bg-glass-strong: rgba(255, 255, 255, 0.9);
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  --bg-glass-strong: rgba(255, 255, 255, 0.92);
   --bg-status: linear-gradient(135deg, #059669 0%, #047857 100%);
-  --bg-pattern-opacity: 0.04;
+  --bg-pattern-opacity: 0.03;
 
   --text-primary: #064e3b;
   --text-secondary: #065f46;
@@ -63,10 +63,10 @@
   --border-subtle: #e5e7eb;
   --divider: rgba(6, 95, 70, 0.1);
 
-  --shadow-sm: 0 1px 3px rgba(6, 78, 59, 0.08);
-  --shadow-md: 0 4px 12px rgba(6, 78, 59, 0.1);
-  --shadow-lg: 0 8px 32px rgba(6, 78, 59, 0.12);
-  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.15);
+  --shadow-sm: 0 1px 3px rgba(6, 78, 59, 0.06);
+  --shadow-md: 0 4px 12px rgba(6, 78, 59, 0.08);
+  --shadow-lg: 0 8px 32px rgba(6, 78, 59, 0.1);
+  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.12);
 
   --accent: #059669;
   --accent-light: #10b981;
@@ -87,12 +87,12 @@
 [data-theme="dark"] {
   --bg-primary: #0c1222;
   --bg-secondary: #111827;
-  --bg-card: rgba(26, 35, 50, 0.8);
-  --bg-card-hover: rgba(36, 48, 68, 0.9);
-  --bg-glass: rgba(17, 24, 39, 0.7);
-  --bg-glass-strong: rgba(17, 24, 39, 0.85);
+  --bg-card: rgba(26, 35, 50, 0.92);
+  --bg-card-hover: rgba(36, 48, 68, 0.95);
+  --bg-glass: rgba(17, 24, 39, 0.85);
+  --bg-glass-strong: rgba(17, 24, 39, 0.94);
   --bg-status: linear-gradient(135deg, #065f46 0%, #064e3b 100%);
-  --bg-pattern-opacity: 0.06;
+  --bg-pattern-opacity: 0.015;
 
   --text-primary: #ecfdf5;
   --text-secondary: #a7f3d0;
@@ -100,14 +100,14 @@
   --text-on-accent: #ffffff;
   --text-on-dark: #ecfdf5;
 
-  --border-color: rgba(16, 185, 129, 0.2);
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --divider: rgba(167, 243, 208, 0.08);
+  --border-color: rgba(16, 185, 129, 0.15);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --divider: rgba(167, 243, 208, 0.06);
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.2);
+  --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.15);
 
   --accent: #10b981;
   --accent-light: #34d399;
@@ -144,9 +144,11 @@ body {
   min-height: 100dvh;
   overflow-x: hidden;
   transition: background-color 0.4s ease, color 0.4s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Islamic geometric background pattern */
+/* Islamic geometric background pattern — very subtle */
 body::before {
   content: "";
   position: fixed;
@@ -164,8 +166,9 @@ body::before {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(16px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -173,23 +176,34 @@ body::before {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes breathe {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
   }
+
   50% {
     box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
   }
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.7;
   }
+
   50% {
     opacity: 1;
   }
@@ -200,6 +214,7 @@ body::before {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -207,9 +222,12 @@ body::before {
 }
 
 @keyframes countdownPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.02);
   }
@@ -219,31 +237,38 @@ body::before {
   0% {
     background-position: -200% center;
   }
+
   100% {
     background-position: 200% center;
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-6px);
   }
 }
 
 @keyframes crescentGlow {
-  0%, 100% {
-    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.4));
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.3));
   }
+
   50% {
-    filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.7));
+    filter: drop-shadow(0 0 14px rgba(251, 191, 36, 0.6));
   }
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
+  animation: fadeInUp 0.5s ease-out forwards;
 }
 
 .animate-fade-in {
@@ -268,13 +293,54 @@ body::before {
 }
 
 /* Staggered delays */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-.delay-500 { animation-delay: 0.5s; }
-.delay-600 { animation-delay: 0.6s; }
-.delay-700 { animation-delay: 0.7s; }
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+.delay-600 {
+  animation-delay: 0.6s;
+}
+
+.delay-700 {
+  animation-delay: 0.7s;
+}
+
+/* ═══════════════════════════
+   ACCORDION — smooth expand/collapse
+   ═══════════════════════════ */
+
+.accordion-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease;
+}
+
+.accordion-content[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.accordion-inner {
+  overflow: hidden;
+}
 
 /* ═══════════════════════════
    COMPONENT UTILITIES
@@ -282,17 +348,17 @@ body::before {
 
 .glass-card {
   background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s ease;
 }
 
 .glass-card:hover {
-  box-shadow: var(--shadow-lg);
-  border-color: var(--accent-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .solid-card {
@@ -300,7 +366,7 @@ body::before {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .solid-card:hover {
@@ -321,7 +387,7 @@ body::before {
 
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -367,7 +433,7 @@ body::before {
 .app-container {
   position: relative;
   z-index: 1;
-  max-width: 480px;
+  max-width: 520px;
   margin: 0 auto;
   padding: 0 16px;
   min-height: 100dvh;
@@ -375,7 +441,29 @@ body::before {
 
 @media (min-width: 640px) {
   .app-container {
-    max-width: 520px;
+    max-width: 560px;
     padding: 0 24px;
   }
+}
+
+/* ═══════════════════════════
+   ICON UTILITIES
+   ═══════════════════════════ */
+
+.icon-sm {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.icon-md {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.icon-lg {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
 }

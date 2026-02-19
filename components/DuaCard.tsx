@@ -24,7 +24,6 @@ function SingleDua({
             className="glass-card"
             style={{
                 overflow: "hidden",
-                transition: "all 0.3s ease",
             }}
         >
             {/* Header */}
@@ -32,7 +31,7 @@ function SingleDua({
                 onClick={() => setIsExpanded(!isExpanded)}
                 style={{
                     width: "100%",
-                    padding: "16px 20px",
+                    padding: "14px 18px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
@@ -51,95 +50,106 @@ function SingleDua({
                 >
                     {t(titleKey, lang)}
                 </span>
-                <span
+                <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     style={{
-                        transform: isExpanded ? "rotate(180deg)" : "rotate(0)",
-                        transition: "transform 0.3s ease",
-                        fontSize: 14,
                         color: "var(--text-muted)",
+                        transform: isExpanded ? "rotate(180deg)" : "rotate(0)",
+                        transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                 >
-                    ▾
-                </span>
+                    <polyline points="6 9 12 15 18 9" />
+                </svg>
             </button>
 
-            {/* Content */}
-            {isExpanded && (
-                <div
-                    className="animate-fade-in"
-                    style={{
-                        padding: "0 20px 20px",
-                    }}
-                >
-                    {/* Arabic */}
-                    <p
-                        className="text-arabic"
-                        style={{
-                            fontSize: 22,
-                            color: "var(--accent)",
-                            marginBottom: 16,
-                            padding: "16px",
-                            background: "var(--bg-secondary)",
-                            borderRadius: "var(--radius-md)",
-                            textAlign: "right",
-                            lineHeight: 2.2,
-                        }}
-                    >
-                        {dua.arabic}
-                    </p>
+            {/* Smooth Accordion Content */}
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateRows: isExpanded ? "1fr" : "0fr",
+                    opacity: isExpanded ? 1 : 0,
+                    transition: "grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease",
+                }}
+            >
+                <div style={{ overflow: "hidden" }}>
+                    <div style={{ padding: "0 18px 18px" }}>
+                        {/* Arabic */}
+                        <p
+                            className="text-arabic"
+                            style={{
+                                fontSize: 22,
+                                color: "var(--accent)",
+                                marginBottom: 14,
+                                padding: "14px",
+                                background: "var(--bg-secondary)",
+                                borderRadius: "var(--radius-md)",
+                                textAlign: "right",
+                                lineHeight: 2.2,
+                            }}
+                        >
+                            {dua.arabic}
+                        </p>
 
-                    {/* Transliteration */}
-                    <div style={{ marginBottom: 12 }}>
-                        <p
-                            style={{
-                                fontSize: 10,
-                                fontWeight: 700,
-                                color: "var(--text-muted)",
-                                textTransform: "uppercase",
-                                letterSpacing: "0.1em",
-                                marginBottom: 4,
-                            }}
-                        >
-                            {t("transliteration", lang)}
-                        </p>
-                        <p
-                            style={{
-                                fontSize: 13,
-                                color: "var(--text-secondary)",
-                                fontStyle: "italic",
-                                lineHeight: 1.6,
-                            }}
-                        >
-                            {dua.transliteration}
-                        </p>
-                    </div>
+                        {/* Transliteration */}
+                        <div style={{ marginBottom: 12 }}>
+                            <p
+                                style={{
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    color: "var(--text-muted)",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.1em",
+                                    marginBottom: 4,
+                                }}
+                            >
+                                {t("transliteration", lang)}
+                            </p>
+                            <p
+                                style={{
+                                    fontSize: 13,
+                                    color: "var(--text-secondary)",
+                                    fontStyle: "italic",
+                                    lineHeight: 1.6,
+                                }}
+                            >
+                                {dua.transliteration}
+                            </p>
+                        </div>
 
-                    {/* Meaning */}
-                    <div>
-                        <p
-                            style={{
-                                fontSize: 10,
-                                fontWeight: 700,
-                                color: "var(--text-muted)",
-                                textTransform: "uppercase",
-                                letterSpacing: "0.1em",
-                                marginBottom: 4,
-                            }}
-                        >
-                            {t("meaning", lang)}
-                        </p>
-                        <p
-                            style={{
-                                fontSize: 13,
-                                color: "var(--text-secondary)",
-                                lineHeight: 1.6,
-                            }}
-                        >
-                            {lang === "en" ? dua.meaning_en : dua.meaning_bn}
-                        </p>
+                        {/* Meaning */}
+                        <div>
+                            <p
+                                style={{
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    color: "var(--text-muted)",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.1em",
+                                    marginBottom: 4,
+                                }}
+                            >
+                                {t("meaning", lang)}
+                            </p>
+                            <p
+                                style={{
+                                    fontSize: 13,
+                                    color: "var(--text-secondary)",
+                                    lineHeight: 1.6,
+                                }}
+                            >
+                                {lang === "en" ? dua.meaning_en : dua.meaning_bn}
+                            </p>
+                        </div>
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }
@@ -149,16 +159,15 @@ export default function DuaCard({ lang }: DuaCardProps) {
         <div>
             <h2
                 style={{
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: 800,
                     color: "var(--text-primary)",
-                    marginBottom: 12,
+                    marginBottom: 10,
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
                 }}
             >
-                <span>🤲</span>
                 {t("duas", lang)}
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
