@@ -1,6 +1,7 @@
 "use client";
 
 import { Lang, t } from "@/lib/i18n";
+import { DotLottiePlayer } from "@dotlottie/react-player";
 
 interface HeaderProps {
     lang: Lang;
@@ -34,13 +35,15 @@ export default function Header({ lang, setLang, theme, setTheme }: HeaderProps) 
                 }}
             >
                 {/* Logo & Name */}
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <img
-                        src="/icons/moon-512.png"
-                        alt="Ramadan Daily"
-                        className="animate-crescent"
-                        style={{ width: 30, height: 30, borderRadius: "50%" }}
-                    />
+                <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
+                    <div className="w-10 h-10 sm:w-14 sm:h-14">
+                        <DotLottiePlayer
+                            src="/Icon - Ramadan.lottie"
+                            autoplay
+                            loop
+                            className="w-full h-full"
+                        />
+                    </div>
                     <div>
                         <h1
                             style={{
