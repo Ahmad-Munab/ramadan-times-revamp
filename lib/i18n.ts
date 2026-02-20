@@ -24,6 +24,9 @@ const translations: Record<string, Record<Lang, string>> = {
     sehri: { en: "Sehri ends at", bn: "সেহরির শেষ সময়" },
     iftar: { en: "Iftar at", bn: "ইফতার" },
     today: { en: "Today", bn: "আজ" },
+    sehri_done: { en: "(Done)", bn: "(শেষ)" },
+    iftar_ongoing: { en: "(Ongoing)", bn: "(চলছে)" },
+    prayer_reminder: { en: "Sehri time ended. Pray now!", bn: "সেহরির সময় শেষ। নামাজ পড়ুন!" },
 
     // ─── Roza ───
     roza: { en: "Roza", bn: "রোজা" },

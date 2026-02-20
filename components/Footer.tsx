@@ -37,6 +37,7 @@ export default function Footer({ lang }: FooterProps) {
                         fontSize: 11,
                         color: "var(--text-muted)",
                         fontWeight: 500,
+                        fontFamily: "system-ui, -apple-system, sans-serif",
                     }}
                 >
                     {t("ramadan_year", lang)}

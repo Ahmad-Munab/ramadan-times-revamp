@@ -240,6 +240,87 @@ export function getRozaNumber(): number {
   return idx === -1 ? 0 : idx + 1;
 }
 
+/**
+ * Returns the schedule to display in the UI.
+ * Shows today's times until 1 hour past Iftaar, then switches to next day.
+ */
+export function getDisplaySchedule(
+  offsetMinutes: number
+): (DaySchedule & { adjustedSehri: string; adjustedIftar: string; displayRoza: number }) | null {
+  const now = new Date();
+  const bdNow = new Date(
+    now.toLocaleString("en-US", { timeZone: "Asia/Dhaka" })
+  );
+  const nowMinutes = bdNow.getHours() * 60 + bdNow.getMinutes();
+  const schedule = getSchedule();
+  const todayIdx = getTodayIndex();
+
+  if (todayIdx === -1) return null;
+
+  const today = schedule[todayIdx];
+  const todayIftar = timeToMinutes(applyOffset(today.iftar, offsetMinutes));
+
+  // If more than 1 hour past Iftaar, show next day
+  if (nowMinutes > todayIftar + 60 && todayIdx + 1 < schedule.length) {
+    const nextDay = schedule[todayIdx + 1];
+    return {
+      ...nextDay,
+      adjustedSehri: applyOffset(nextDay.sehri_end, offsetMinutes),
+      adjustedIftar: applyOffset(nextDay.iftar, offsetMinutes),
+      displayRoza: todayIdx + 2,
+    };
+  }
+
+  return {
+    ...today,
+    adjustedSehri: applyOffset(today.sehri_end, offsetMinutes),
+    adjustedIftar: applyOffset(today.iftar, offsetMinutes),
+    displayRoza: todayIdx + 1,
+  };
+}
+
+export interface TimeCardStatusResult {
+  sehriStatus: "active" | "done";
+  iftarStatus: "upcoming" | "ongoing";
+  showPrayerReminder: boolean;
+}
+
+/**
+ * Returns the current contextual status for the time cards.
+ */
+export function getTimeCardStatus(offsetMinutes: number): TimeCardStatusResult {
+  const now = new Date();
+  const bdNow = new Date(
+    now.toLocaleString("en-US", { timeZone: "Asia/Dhaka" })
+  );
+  const nowMinutes = bdNow.getHours() * 60 + bdNow.getMinutes();
+  const schedule = getSchedule();
+  const todayIdx = getTodayIndex();
+
+  if (todayIdx === -1) {
+    return { sehriStatus: "active", iftarStatus: "upcoming", showPrayerReminder: false };
+  }
+
+  const today = schedule[todayIdx];
+  const sehriEnd = timeToMinutes(applyOffset(today.sehri_end, offsetMinutes));
+  const iftarTime = timeToMinutes(applyOffset(today.iftar, offsetMinutes));
+
+  // If we've rolled over to next day (1h past iftar), everything is fresh/active
+  if (nowMinutes > iftarTime + 60) {
+    return { sehriStatus: "active", iftarStatus: "upcoming", showPrayerReminder: false };
+  }
+
+  const sehriDone = nowMinutes >= sehriEnd;
+  const prayerReminder = sehriDone && nowMinutes < sehriEnd + 60;
+  const iftarOngoing = nowMinutes >= iftarTime;
+
+  return {
+    sehriStatus: sehriDone ? "done" : "active",
+    iftarStatus: iftarOngoing ? "ongoing" : "upcoming",
+    showPrayerReminder: prayerReminder,
+  };
+}
+
 export function format12h(time24h: string): string {
   const [h, m] = time24h.split(":").map(Number);
   const period = h >= 12 ? "PM" : "AM";

@@ -5,7 +5,8 @@ import { Lang } from "@/lib/i18n";
 import {
   getCurrentStatus,
   getRozaNumber,
-  getTodaySchedule,
+  getDisplaySchedule,
+  getTimeCardStatus,
   getDistrictsFlat,
   District,
 } from "@/lib/timings";
@@ -81,11 +82,12 @@ export default function Home() {
   // ─── Derived state ───
   const status = getCurrentStatus(selectedDistrict.offset);
   const rozaNumber = getRozaNumber();
-  const todaySchedule = getTodaySchedule(selectedDistrict.offset);
+  const displaySchedule = getDisplaySchedule(selectedDistrict.offset);
+  const timeCardStatus = getTimeCardStatus(selectedDistrict.offset);
 
   // Use fallback times if not a Ramadan day (use day 1 for preview)
-  const sehriTime = todaySchedule?.adjustedSehri ?? "05:12";
-  const iftarTime = todaySchedule?.adjustedIftar ?? "17:58";
+  const sehriTime = displaySchedule?.adjustedSehri ?? "05:12";
+  const iftarTime = displaySchedule?.adjustedIftar ?? "17:58";
 
   // ─── Prevent flash before hydration ───
   if (!mounted) {
@@ -173,6 +175,7 @@ export default function Home() {
               sehriTime={sehriTime}
               iftarTime={iftarTime}
               lang={lang}
+              status={timeCardStatus}
             />
           </section>
 
