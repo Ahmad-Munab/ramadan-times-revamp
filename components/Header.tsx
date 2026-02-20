@@ -36,14 +36,22 @@ export default function Header({ lang, setLang, theme, setTheme }: HeaderProps) 
             >
                 {/* Logo & Name */}
                 <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
-                    <div className="w-10 h-10 sm:w-14 sm:h-14">
-                        <DotLottiePlayer
-                            src="/Icon - Ramadan.lottie"
-                            autoplay
-                            loop
-                            className="w-full h-full"
+                    {theme === "light" ? (
+                        <div className="w-10 h-10 sm:w-13 sm:h-13">
+                            <DotLottiePlayer
+                                src="/Icon - Ramadan.lottie"
+                                autoplay
+                                loop
+                                className="w-full h-full"
+                            />
+                        </div>
+                    ) : (
+                        <img
+                            src="/icons/moon-512.png"
+                            alt="Ramadan Daily"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
                         />
-                    </div>
+                    )}
                     <div>
                         <h1
                             style={{

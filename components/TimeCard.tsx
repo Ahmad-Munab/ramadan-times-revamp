@@ -60,7 +60,7 @@ export default function TimeCard({ sehriTime, iftarTime, lang }: TimeCardProps) 
                 <p
                     style={{
                         fontSize: 24,
-                        fontWeight: 900,
+                        fontWeight: 800,
                         color: "var(--text-primary)",
                         letterSpacing: "-0.02em",
                         lineHeight: 1,
@@ -68,16 +68,7 @@ export default function TimeCard({ sehriTime, iftarTime, lang }: TimeCardProps) 
                 >
                     {localizeTime(sehriTime, lang)}
                 </p>
-                <p
-                    style={{
-                        fontSize: 10,
-                        color: "var(--text-muted)",
-                        marginTop: 6,
-                        fontWeight: 500,
-                    }}
-                >
-                    {t("sehri_ends_at", lang)}
-                </p>
+
             </div>
 
             {/* Iftar Card */}
@@ -130,23 +121,13 @@ export default function TimeCard({ sehriTime, iftarTime, lang }: TimeCardProps) 
                 <p
                     style={{
                         fontSize: 24,
-                        fontWeight: 900,
+                        fontWeight: 800,
                         color: "var(--text-primary)",
                         letterSpacing: "-0.02em",
                         lineHeight: 1,
                     }}
                 >
                     {localizeTime(iftarTime, lang)}
-                </p>
-                <p
-                    style={{
-                        fontSize: 10,
-                        color: "var(--text-muted)",
-                        marginTop: 6,
-                        fontWeight: 500,
-                    }}
-                >
-                    {t("iftar_at", lang)}
                 </p>
             </div>
         </div>

@@ -92,20 +92,6 @@ export default function CountdownTimer({
                 {label}
             </p>
 
-            {/* Target time */}
-            {targetTime && (
-                <p
-                    style={{
-                        fontSize: 12,
-                        color: "var(--accent)",
-                        fontWeight: 700,
-                        marginBottom: 16,
-                    }}
-                >
-                    {localizeNumber(targetTime, lang)}
-                </p>
-            )}
-
             {/* Countdown Digits */}
             <div
                 style={{

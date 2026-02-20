@@ -171,8 +171,8 @@ export default function DuaCard({ lang }: DuaCardProps) {
                 {t("duas", lang)}
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <SingleDua dua={sehriDua} titleKey="sehri_dua" lang={lang} />
                 <SingleDua dua={iftarDua} titleKey="iftar_dua" lang={lang} />
+                <SingleDua dua={sehriDua} titleKey="sehri_dua" lang={lang} />
             </div>
         </div>
     );

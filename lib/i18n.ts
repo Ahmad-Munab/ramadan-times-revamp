@@ -15,16 +15,14 @@ const translations: Record<string, Record<Lang, string>> = {
 
     // ─── Countdown ───
     countdown_to_sehri: { en: "Time until Sehri ends", bn: "সেহরি শেষ হতে বাকি" },
-    countdown_to_iftar: { en: "Time until Iftar", bn: "ইফতার পর্যন্ত বাকি" },
+    countdown_to_iftar: { en: "Time until Iftar", bn: "ইফতার পর্যন্ত সময় বাকি" },
     hours: { en: "Hours", bn: "ঘণ্টা" },
     minutes: { en: "Minutes", bn: "মিনিট" },
     seconds: { en: "Seconds", bn: "সেকেন্ড" },
 
     // ─── Time Cards ───
-    sehri: { en: "Sehri", bn: "সেহরি" },
-    iftar: { en: "Iftar", bn: "ইফতার" },
-    sehri_ends_at: { en: "Sehri ends at", bn: "সেহরি শেষ" },
-    iftar_at: { en: "Iftar at", bn: "ইফতার" },
+    sehri: { en: "Sehri ends at", bn: "সেহরির শেষ সময়" },
+    iftar: { en: "Iftar at", bn: "ইফতার" },
     today: { en: "Today", bn: "আজ" },
 
     // ─── Roza ───
