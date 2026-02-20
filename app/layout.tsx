@@ -20,6 +20,12 @@ export const metadata: Metadata = {
     "Islamic Foundation Bangladesh",
     "prayer times",
   ],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Ramadan Daily",
+  },
   openGraph: {
     title: "Ramadan Daily — Sehri & Iftar Times Bangladesh 2026",
     description:
@@ -57,8 +63,29 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=DM+Sans:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
+        <link rel="apple-touch-icon" href="/icons/icon.svg" />
       </head>
-      <body><Analytics />{children}</body>
+      <body>
+        <Analytics />
+        <ServiceWorkerRegister />
+        {children}
+      </body>
     </html>
+  );
+}
+
+function ServiceWorkerRegister() {
+  return (
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/sw.js');
+            });
+          }
+        `,
+      }}
+    />
   );
 }

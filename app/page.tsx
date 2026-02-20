@@ -21,8 +21,8 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   // ─── State ───
-  const [lang, setLang] = useState<Lang>("bn");
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [lang, setLang] = useState<Lang>("en");
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const [selectedDistrict, setSelectedDistrict] = useState<District>(() => {
     const districts = getDistrictsFlat();
     return districts.find((d) => d.district === "Dhaka") ?? districts[0];
