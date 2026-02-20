@@ -35,13 +35,12 @@ export default function Header({ lang, setLang, theme, setTheme }: HeaderProps) 
             >
                 {/* Logo & Name */}
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span
+                    <img
+                        src="/icons/moon-512.png"
+                        alt="Ramadan Daily"
                         className="animate-crescent"
-                        style={{ fontSize: 26, lineHeight: 1 }}
-                        aria-hidden="true"
-                    >
-                        🌙
-                    </span>
+                        style={{ width: 30, height: 30, borderRadius: "50%" }}
+                    />
                     <div>
                         <h1
                             style={{
