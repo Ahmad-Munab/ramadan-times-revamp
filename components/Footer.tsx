@@ -70,10 +70,10 @@ export default function Footer({ lang }: FooterProps) {
                         href="https://munab.ascendralabs.com"
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="underline"
                         style={{
                             color: "var(--accent)",
                             fontWeight: 700,
-                            textDecoration: "none",
                         }}
                     >
                         Munab
