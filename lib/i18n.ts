@@ -60,6 +60,9 @@ const translations: Record<string, Record<Lang, string>> = {
     read_hadith: { en: "Read Hadith", bn: "হাদিস পড়ুন" },
     quran_desc: { en: "Read the Holy Quran online", bn: "অনলাইনে পবিত্র কুরআন পড়ুন" },
     hadith_desc: { en: "Browse authentic Hadith collections", bn: "প্রামাণিক হাদিস সংকলন পড়ুন" },
+    listen_quran: { en: "Listen to Quran", bn: "কুরআন শুনুন" },
+    about_app: { en: "About this App", bn: "অ্যাপ সম্পর্কে" },
+    download_calendar: { en: "Download Full Ramadan Calendar (Dhaka)", bn: "সম্পূর্ণ রমজান ক্যালেন্ডার ডাউনলোড করুন (ঢাকা)" },
 
     // ─── Footer ───
     data_source: { en: "Data: Islamic Foundation Bangladesh", bn: "তথ্যসূত্র: ইসলামিক ফাউন্ডেশন বাংলাদেশ" },

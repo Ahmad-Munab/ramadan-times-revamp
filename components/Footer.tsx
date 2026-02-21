@@ -55,30 +55,31 @@ export default function Footer({ lang }: FooterProps) {
             />
 
             {/* Made with love */}
-            <p
-                style={{
-                    fontSize: 13,
-                    color: "var(--text-secondary)",
-                    marginBottom: 8,
-                    fontWeight: 500,
-                }}
-            >
-                Made with{" "}
-                <span style={{ color: "#ef4444" }}>❤️</span>{" "}
-                by{" "}
-                <a
-                    href="https://munab.ascendralabs.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 8 }}>
+                <p
                     style={{
-                        color: "var(--accent)",
-                        fontWeight: 700,
-                        textDecoration: "none",
+                        fontSize: 13,
+                        color: "var(--text-secondary)",
+                        fontWeight: 500,
                     }}
                 >
-                    Munab
-                </a>
-            </p>
+                    Made with{" "}
+                    <span style={{ color: "#ef4444" }}>❤️</span>{" "}
+                    by{" "}
+                    <a
+                        href="https://munab.ascendralabs.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            color: "var(--accent)",
+                            fontWeight: 700,
+                            textDecoration: "none",
+                        }}
+                    >
+                        Munab
+                    </a>
+                </p>
+            </div>
 
             {/* Copyright */}
             <p

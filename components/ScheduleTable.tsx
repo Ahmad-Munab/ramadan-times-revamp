@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Lang, t, localizeNumber, localizeTime } from "@/lib/i18n";
 import { getAdjustedSchedule, getTodayIndex } from "@/lib/timings";
 
@@ -124,62 +124,85 @@ export default function ScheduleTable({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {schedule.map((day, idx) => {
-                                        const isToday = idx === todayIdx;
-                                        return (
-                                            <tr
-                                                key={day.roza}
-                                                style={{
-                                                    background: isToday
-                                                        ? "var(--accent)"
-                                                        : idx % 2 === 0
-                                                            ? "transparent"
-                                                            : "var(--bg-secondary)",
-                                                    color: isToday ? "#fff" : "var(--text-primary)",
-                                                    borderBottom: "1px solid var(--divider)",
-                                                    transition: "background 0.2s",
-                                                }}
-                                            >
-                                                <td style={{ ...tdStyle, fontWeight: 700 }}>
-                                                    {localizeNumber(day.roza, lang)}
-                                                </td>
-                                                <td style={{ ...tdStyle, textAlign: "left" }}>
-                                                    <span style={{ fontWeight: 600 }}>
-                                                        {localizeNumber(day.date.slice(5), lang)}
-                                                    </span>
-                                                    <span
-                                                        style={{
-                                                            fontSize: 11,
-                                                            opacity: 0.7,
-                                                            marginLeft: 6,
-                                                        }}
-                                                    >
-                                                        {dayNames[day.day]?.[lang] ?? day.day}
-                                                    </span>
-                                                    {isToday && (
-                                                        <span
+                                    {(() => {
+                                        const sections = [
+                                            { title: lang === "en" ? "Rahmat (Days 1-10)" : "রহমত (১-১০ দিন)", start: 1, end: 10, color: "var(--accent)" },
+                                            { title: lang === "en" ? "Maghfirah (Days 11-20)" : "মাগফিরাত (১১-২০ দিন)", start: 11, end: 20, color: "#d97706" },
+                                            { title: lang === "en" ? "Najat (Days 21-30)" : "নাজাত (২১-৩০ দিন)", start: 21, end: 30, color: "#9333ea" },
+                                        ];
+
+                                        return sections.map((section) => (
+                                            <React.Fragment key={section.title}>
+                                                <tr style={{ background: "rgba(0,0,0,0.05)" }}>
+                                                    <td colSpan={4} style={{ padding: "8px 12px", textAlign: "left" }}>
+                                                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                                            <div style={{ width: 3, height: 16, background: section.color, borderRadius: 4 }} />
+                                                            <span style={{ fontSize: 11, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-secondary)" }}>
+                                                                {section.title}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {schedule.slice(section.start - 1, section.end).map((day, sIdx) => {
+                                                    const idx = section.start - 1 + sIdx;
+                                                    const isToday = idx === todayIdx;
+                                                    return (
+                                                        <tr
+                                                            key={day.roza}
                                                             style={{
-                                                                fontSize: 9,
-                                                                background: "rgba(255,255,255,0.25)",
-                                                                padding: "2px 6px",
-                                                                borderRadius: "var(--radius-full)",
-                                                                marginLeft: 6,
-                                                                fontWeight: 700,
+                                                                background: isToday
+                                                                    ? "var(--accent)"
+                                                                    : idx % 2 === 0
+                                                                        ? "transparent"
+                                                                        : "var(--bg-secondary)",
+                                                                color: isToday ? "#fff" : "var(--text-primary)",
+                                                                borderBottom: "1px solid var(--divider)",
+                                                                transition: "background 0.2s",
                                                             }}
                                                         >
-                                                            {t("today", lang)}
-                                                        </span>
-                                                    )}
-                                                </td>
-                                                <td style={tdStyle}>
-                                                    {localizeTime(day.adjustedSehri, lang)}
-                                                </td>
-                                                <td style={tdStyle}>
-                                                    {localizeTime(day.adjustedIftar, lang)}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
+                                                            <td style={{ ...tdStyle, fontWeight: 700 }}>
+                                                                {localizeNumber(day.roza, lang)}
+                                                            </td>
+                                                            <td style={{ ...tdStyle, textAlign: "left" }}>
+                                                                <span style={{ fontWeight: 600 }}>
+                                                                    {localizeNumber(day.date.slice(5), lang)}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        fontSize: 11,
+                                                                        opacity: 0.7,
+                                                                        marginLeft: 6,
+                                                                    }}
+                                                                >
+                                                                    {dayNames[day.day]?.[lang] ?? day.day}
+                                                                </span>
+                                                                {isToday && (
+                                                                    <span
+                                                                        style={{
+                                                                            fontSize: 9,
+                                                                            background: "rgba(255,255,255,0.25)",
+                                                                            padding: "2px 6px",
+                                                                            borderRadius: "var(--radius-full)",
+                                                                            marginLeft: 6,
+                                                                            fontWeight: 700,
+                                                                        }}
+                                                                    >
+                                                                        {t("today", lang)}
+                                                                    </span>
+                                                                )}
+                                                            </td>
+                                                            <td style={tdStyle}>
+                                                                {localizeTime(day.adjustedSehri, lang)}
+                                                            </td>
+                                                            <td style={tdStyle}>
+                                                                {localizeTime(day.adjustedIftar, lang)}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </React.Fragment>
+                                        ));
+                                    })()}
                                 </tbody>
                             </table>
                         </div>
