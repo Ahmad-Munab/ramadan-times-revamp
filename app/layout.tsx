@@ -45,6 +45,8 @@ export const viewport: Viewport = {
   ],
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -67,6 +69,16 @@ export default function RootLayout({
       </head>
       <body>
         <Analytics />
+        <Toaster position="bottom-center" toastOptions={{
+          style: {
+            background: 'var(--bg-glass-strong)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid var(--border-color)',
+            color: 'var(--text-primary)',
+            fontFamily: 'var(--font-primary)',
+            borderRadius: 'var(--radius-lg)',
+          }
+        }} />
         <ServiceWorkerRegister />
         {children}
       </body>

@@ -2,6 +2,7 @@
 
 import { Lang, t } from "@/lib/i18n";
 import { DotLottiePlayer } from "@dotlottie/react-player";
+import { toast } from "sonner";
 
 interface HeaderProps {
     lang: Lang;
@@ -13,6 +14,16 @@ interface HeaderProps {
 }
 
 export default function Header({ lang, setLang, theme, setTheme, azanEnabled, setAzanEnabled }: HeaderProps) {
+    const handleAzanToggle = () => {
+        const nextState = !azanEnabled;
+        setAzanEnabled(nextState);
+        toast.dismiss(); // Clear any existing toasts
+        toast(nextState ? t("azan_enabled", lang) : t("azan_disabled", lang), {
+            icon: nextState ? "🔔" : "🔕",
+            duration: 2000,
+        });
+    };
+
     return (
         <header
             style={{
@@ -97,7 +108,7 @@ export default function Header({ lang, setLang, theme, setTheme, azanEnabled, se
 
                 {/* Azaan Toggle */}
                 <button
-                    onClick={() => setAzanEnabled(!azanEnabled)}
+                    onClick={handleAzanToggle}
                     aria-label={azanEnabled ? "Mute Azaan" : "Enable Azaan"}
                     style={{
                         width: 36,

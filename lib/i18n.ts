@@ -83,7 +83,7 @@ const translations: Record<string, Record<Lang, string>> = {
 
     // ─── Azan ───
     azan_notification: { en: "Azan Notification", bn: "আযানের নোটিফিকেশন" },
-    azan_enabled: { en: "Azan enabled", bn: "আযান চালু" },
+    azan_enabled: { en: "Azan will be played when its Iftaar/Fajr time", bn: "ইফতার বা ফজরের সময় হলে আযান বাজবে" },
     azan_disabled: { en: "Azan disabled", bn: "আযান বন্ধ" },
 };
 
