@@ -152,7 +152,7 @@ export default function AboutPage() {
                     <p style={{ color: "var(--accent)", fontSize: 14, fontWeight: 700, textAlign: "center" }}>
                         {lang === "en"
                             ? "Dedicated to the Muslims of Bangladesh. May this Ramadan bring peace and blessings."
-                            : "বাংলাদেশের মুসলিম উম্মাহর জন্য উৎসর্গীকৃত। এই রমজান আপনার জীবনে শান্তি ও বরকত বয়ে আনুক।"}
+                            : "বাংলাদেশের মুসলিমদের জন্য উৎসর্গীকৃত। এই রমজান আপনার জীবনে শান্তি ও বরকত বয়ে আনুক।"}
                     </p>
                 </div>
 
