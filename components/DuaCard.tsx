@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Lang, t } from "@/lib/i18n";
 import { Dua, sehriDua, iftarDua } from "@/lib/duas";
+import Link from "next/link";
 
 interface DuaCardProps {
     lang: Lang;
@@ -173,6 +174,32 @@ export default function DuaCard({ lang }: DuaCardProps) {
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <SingleDua dua={iftarDua} titleKey="iftar_dua" lang={lang} />
                 <SingleDua dua={sehriDua} titleKey="sehri_dua" lang={lang} />
+
+                <Link
+                    href="/duas"
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8,
+                        padding: "12px",
+                        background: "var(--bg-card)",
+                        border: "1px solid var(--border-color)",
+                        borderRadius: "var(--radius-xl)",
+                        color: "var(--accent)",
+                        textDecoration: "none",
+                        fontWeight: 800,
+                        fontSize: 13,
+                        transition: "all 0.2s ease",
+                    }}
+                    className="hover-bg-subtle"
+                >
+                    <span style={{ fontSize: 16 }}>📜</span>
+                    {lang === "en" ? "View All Duas & Azkar" : "সব দোয়া ও জিকির দেখুন"}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </Link>
             </div>
         </div>
     );

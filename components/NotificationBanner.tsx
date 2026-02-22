@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Lang } from "@/lib/i18n";
+import Link from "next/link";
 
 interface Notification {
     id: string;
@@ -91,17 +92,32 @@ export default function NotificationBanner({ lang }: { lang: Lang }) {
                 </div>
 
                 <div style={{ flex: 1 }}>
-                    <h4
-                        style={{
-                            fontSize: 13,
-                            fontWeight: 800,
-                            color: "var(--text-primary)",
-                            marginBottom: 1,
-                            letterSpacing: "-0.01em",
-                        }}
-                    >
-                        {notification.title}
-                    </h4>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 1 }}>
+                        <h4
+                            style={{
+                                fontSize: 13,
+                                fontWeight: 800,
+                                color: "var(--text-primary)",
+                                letterSpacing: "-0.01em",
+                            }}
+                        >
+                            {notification.title}
+                        </h4>
+                        <Link
+                            href="/updates"
+                            style={{
+                                fontSize: 10,
+                                fontWeight: 700,
+                                color: "var(--accent)",
+                                textDecoration: "none",
+                                background: "var(--accent-glass)",
+                                padding: "2px 6px",
+                                borderRadius: 4
+                            }}
+                        >
+                            {lang === "en" ? "History" : "ইতিহাস"}
+                        </Link>
+                    </div>
                     <p
                         style={{
                             fontSize: 11,

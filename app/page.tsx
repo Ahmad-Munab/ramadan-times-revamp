@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Lang } from "@/lib/i18n";
 import {
   getCurrentStatus,
@@ -34,6 +34,16 @@ export default function Home() {
   const [azanEnabled, setAzanEnabled] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [lastAzaanTime, setLastAzaanTime] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [isAzanPlaying, setIsAzanPlaying] = useState(false);
+
+  // ─── Live Update Timer ───
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 10000); // Check every 10s for smooth transitions
+    return () => clearInterval(timer);
+  }, []);
 
   // ─── Hydration & localStorage ───
   useEffect(() => {
@@ -85,8 +95,7 @@ export default function Home() {
     if (!mounted || !azanEnabled) return;
 
     const checkAzaan = () => {
-      const now = new Date();
-      const bdNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Dhaka" }));
+      const bdNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }));
       const currentH = bdNow.getHours();
       const currentM = bdNow.getMinutes();
       const currentTimeStr = `${String(currentH).padStart(2, "0")}:${String(currentM).padStart(2, "0")}`;
@@ -105,8 +114,12 @@ export default function Home() {
 
       if ((currentTimeStr === iftarTime || currentTimeStr === sehriPlusStr) && lastAzaanTime !== currentTimeStr) {
         setLastAzaanTime(currentTimeStr);
+        setIsAzanPlaying(true);
         const audio = new Audio("/audio/azaan.mp3");
         audio.play().catch(e => console.error("Azaan playback failed", e));
+
+        // Stop playing indicator after ~3.5 minutes (average duration)
+        setTimeout(() => setIsAzanPlaying(false), 3.5 * 60 * 1000);
       }
     };
 
@@ -127,13 +140,36 @@ export default function Home() {
     []
   );
 
-  // ─── Derived state ───
+  // ─── Derived state (Reactive to currentTime) ───
   const status = getCurrentStatus(selectedDistrict.offset);
   const rozaNumber = getRozaNumber();
   const displaySchedule = getDisplaySchedule(selectedDistrict.offset);
   const timeCardStatus = getTimeCardStatus(selectedDistrict.offset);
 
-  // Use fallback times if not a Ramadan day (use day 1 for preview)
+  // Azan Nearing Check (5 minutes)
+  const azanNearing = useMemo(() => {
+    if (!displaySchedule) return null;
+    const bdNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }));
+    const nowMinutes = bdNow.getHours() * 60 + bdNow.getMinutes();
+
+    // Check for Sehri end
+    const [sh, sm] = displaySchedule.adjustedSehri.split(":").map(Number);
+    const sehriMinutes = sh * 60 + sm;
+
+    // Check for Iftar
+    const [ih, im] = displaySchedule.adjustedIftar.split(":").map(Number);
+    const iftarMinutes = ih * 60 + im;
+
+    if (sehriMinutes - nowMinutes > 0 && sehriMinutes - nowMinutes <= 5) {
+      return { type: "sehri", minutes: sehriMinutes - nowMinutes };
+    }
+    if (iftarMinutes - nowMinutes > 0 && iftarMinutes - nowMinutes <= 5) {
+      return { type: "iftar", minutes: iftarMinutes - nowMinutes };
+    }
+    return null;
+  }, [displaySchedule, currentTime]);
+
+  // Use fallback times if not a Ramadan day
   const sehriTime = displaySchedule?.adjustedSehri ?? "05:12";
   const iftarTime = displaySchedule?.adjustedIftar ?? "17:58";
 
@@ -195,6 +231,66 @@ export default function Home() {
             paddingTop: 24,
           }}
         >
+          {/* Azan Proximity Indicator */}
+          {azanNearing && !isAzanPlaying && (
+            <div
+              className="animate-fade-in-up"
+              style={{
+                background: "linear-gradient(135deg, #059669, #047857)",
+                borderRadius: "var(--radius-xl)",
+                padding: "16px 20px",
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+                boxShadow: "0 10px 25px rgba(5, 150, 105, 0.3)",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              <div style={{ fontSize: 24, animation: "bounce 2s infinite" }}>⏳</div>
+              <div style={{ flex: 1 }}>
+                <p style={{ color: "white", fontWeight: 800, fontSize: 13, marginBottom: 2 }}>
+                  {azanNearing.type === "sehri"
+                    ? (lang === "en" ? "Azan nearing (Sehri end)" : "আজান সন্নিকটে (সেহরীর শেষ সময়)")
+                    : (lang === "en" ? "Azan nearing (Iftar)" : "আজান সন্নিকটে (ইফতার)")}
+                </p>
+                <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 11, fontWeight: 600 }}>
+                  {lang === "en"
+                    ? `Don't close the site to hear the Azan automatically (${azanNearing.minutes}m left)`
+                    : `স্বয়ংক্রিয়ভাবে আজান শুনতে সাইটটি বন্ধ করবেন না (${azanNearing.minutes} মিনিট বাকি)`}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Azan Playing Indicator */}
+          {isAzanPlaying && (
+            <div
+              className="animate-pulse"
+              style={{
+                background: "linear-gradient(135deg, #059669, #065f46)",
+                borderRadius: "var(--radius-xl)",
+                padding: "16px 20px",
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+                boxShadow: "0 10px 25px rgba(5, 150, 105, 0.4)",
+                border: "2px solid #34d399",
+              }}
+            >
+              <div style={{ fontSize: 24 }}>🔊</div>
+              <div style={{ flex: 1 }}>
+                <p style={{ color: "white", fontWeight: 800, fontSize: 13, marginBottom: 2 }}>
+                  {lang === "en" ? "Azan is playing..." : "আজান চলছে..."}
+                </p>
+                <div style={{ display: "flex", gap: 3 }}>
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} style={{ width: 3, height: 12, background: "white", borderRadius: 2, animation: `music-bar 0.8s ease-in-out infinite alternate ${i * 0.1}s` }}></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* 1. District Selector */}
           <section className="animate-fade-in-up" style={{ opacity: 0, animationDelay: "0.05s", animationFillMode: "forwards", position: "relative", zIndex: 100 }}>
             <DistrictSelector
@@ -352,7 +448,7 @@ export default function Home() {
           </section>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 40, marginBottom: -10 }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: 12, marginTop: 40, marginBottom: -10 }}>
           <Link
             href="/about"
             style={{
@@ -369,6 +465,25 @@ export default function Home() {
             className="hover-bg-subtle"
           >
             {t("about_app", lang)}
+          </Link>
+          <Link
+            href="/updates"
+            style={{
+              fontSize: 12,
+              color: "var(--text-muted)",
+              textDecoration: "none",
+              fontWeight: 700,
+              display: "flex",
+              alignItems: "center",
+              gap: 4
+            }}
+            className="hover-text-accent"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+            </svg>
+            {lang === "en" ? "Updates History" : "আপডেট হিস্টোরি"}
           </Link>
         </div>
 

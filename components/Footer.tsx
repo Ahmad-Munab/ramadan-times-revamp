@@ -1,6 +1,7 @@
 "use client";
 
 import { Lang, t } from "@/lib/i18n";
+import Link from "next/link";
 
 interface FooterProps {
     lang: Lang;
@@ -55,7 +56,7 @@ export default function Footer({ lang }: FooterProps) {
             />
 
             {/* Made with love */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 8 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "12px 24px", marginBottom: 8 }}>
                 <p
                     style={{
                         fontSize: 13,

@@ -1,8 +1,16 @@
 [
     {
+        "id": "duas-list-22-02-2026",
+        "title": "Dua's list and Azan indicator",
+        "description": "We've added 40+ new Duas & Azkar, live status updates, and Azan proximity indicators! Everything now updates in real-time.",
+        "type": "success",
+        "date": "2026-02-22"
+    },
+    {
         "id": "new-features-1447-2",
         "title": "New Features Added!",
         "description": "We've added an About page, Quran Radio, live Azaan & full ramadan calendar download features. Check them out!",
-        "type": "info"
+        "type": "info",
+        "date": "2026-02-21"
     }
 ]
