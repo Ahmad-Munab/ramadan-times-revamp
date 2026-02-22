@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Lang } from "@/lib/i18n";
 import {
   getCurrentStatus,
@@ -33,9 +33,11 @@ export default function Home() {
   });
   const [azanEnabled, setAzanEnabled] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const [lastAzaanTime, setLastAzaanTime] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isAzanPlaying, setIsAzanPlaying] = useState(false);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const lastAzaanTimeRef = useRef<string | null>(null);
 
   // ─── Live Update Timer ───
   useEffect(() => {
@@ -92,7 +94,18 @@ export default function Home() {
 
   // ─── Azaan Playback Logic ───
   useEffect(() => {
-    if (!mounted || !azanEnabled) return;
+    if (!mounted || !azanEnabled) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      return;
+    }
+
+    if (!audioRef.current) {
+      audioRef.current = new Audio("/audio/azaan.mp3");
+    }
+    const audio = audioRef.current;
+    audio.load();
 
     const checkAzaan = () => {
       const bdNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }));
@@ -112,22 +125,30 @@ export default function Home() {
       const spm = Math.floor(sehriPlusTotal % 60);
       const sehriPlusStr = `${String(sph).padStart(2, "0")}:${String(spm).padStart(2, "0")}`;
 
-      if ((currentTimeStr === iftarTime || currentTimeStr === sehriPlusStr) && lastAzaanTime !== currentTimeStr) {
-        setLastAzaanTime(currentTimeStr);
+      if ((currentTimeStr === iftarTime || currentTimeStr === sehriPlusStr) && lastAzaanTimeRef.current !== currentTimeStr) {
+        lastAzaanTimeRef.current = currentTimeStr;
         setIsAzanPlaying(true);
-        const audio = new Audio("/audio/azaan.mp3");
-        audio.play().catch(e => console.error("Azaan playback failed", e));
+        audio.currentTime = 0;
+        audio.play().catch(e => {
+          if (e.name !== "AbortError") {
+            console.error("Azaan playback failed", e);
+          }
+        });
 
         // Stop playing indicator after ~3.5 minutes (average duration)
         setTimeout(() => setIsAzanPlaying(false), 3.5 * 60 * 1000);
       }
     };
 
-    const interval = setInterval(checkAzaan, 30000); // Check every 30s
+    const interval = setInterval(checkAzaan, 1000); // Check every 1s for precision
     checkAzaan(); // Initial check
 
-    return () => clearInterval(interval);
-  }, [mounted, azanEnabled, selectedDistrict.offset, lastAzaanTime]);
+    return () => {
+      clearInterval(interval);
+      // We don't pause here to allow playback to continue across minor re-renders.
+      // District changes or unmounting will still be caught by the next run's cleanup or this return.
+    };
+  }, [mounted, azanEnabled, selectedDistrict.offset]);
 
   // ─── Handlers ───
   const handleSetLang = useCallback((l: Lang) => setLang(l), []);
@@ -236,29 +257,28 @@ export default function Home() {
             <div
               className="animate-fade-in-up"
               style={{
-                background: "linear-gradient(135deg, #059669, #047857)",
-                borderRadius: "var(--radius-xl)",
-                padding: "16px 20px",
+                background: "var(--bg-card)",
+                backdropFilter: "blur(12px)",
+                borderRadius: "var(--radius-full)",
+                padding: "8px 16px",
                 display: "flex",
                 alignItems: "center",
-                gap: 16,
-                boxShadow: "0 10px 25px rgba(5, 150, 105, 0.3)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                gap: 10,
+                border: "1px solid var(--accent-subtle)",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                alignSelf: "center",
+                maxWidth: "fit-content",
               }}
             >
-              <div style={{ fontSize: 24, animation: "bounce 2s infinite" }}>⏳</div>
-              <div style={{ flex: 1 }}>
-                <p style={{ color: "white", fontWeight: 800, fontSize: 13, marginBottom: 2 }}>
-                  {azanNearing.type === "sehri"
-                    ? (lang === "en" ? "Azan nearing (Sehri end)" : "আজান সন্নিকটে (সেহরীর শেষ সময়)")
-                    : (lang === "en" ? "Azan nearing (Iftar)" : "আজান সন্নিকটে (ইফতার)")}
-                </p>
-                <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 11, fontWeight: 600 }}>
-                  {lang === "en"
-                    ? `Don't close the site to hear the Azan automatically (${azanNearing.minutes}m left)`
-                    : `স্বয়ংক্রিয়ভাবে আজান শুনতে সাইটটি বন্ধ করবেন না (${azanNearing.minutes} মিনিট বাকি)`}
-                </p>
-              </div>
+              <span style={{ fontSize: 16, animation: "bounce 2s infinite" }}>⏳</span>
+              <p style={{ color: "var(--text-primary)", fontWeight: 800, fontSize: 11 }}>
+                {azanNearing.type === "sehri"
+                  ? (lang === "en" ? "Azan nearing" : "আজান সন্নিকটে")
+                  : (lang === "en" ? "Azan nearing" : "আজান সন্নিকটে")}
+                <span style={{ color: "var(--accent)", marginLeft: 6 }}>
+                  ({azanNearing.minutes}m {lang === "en" ? "left" : "বাকি"})
+                </span>
+              </p>
             </div>
           )}
 
@@ -267,27 +287,21 @@ export default function Home() {
             <div
               className="animate-pulse"
               style={{
-                background: "linear-gradient(135deg, #059669, #065f46)",
-                borderRadius: "var(--radius-xl)",
-                padding: "16px 20px",
+                background: "var(--accent-subtle)",
+                borderRadius: "var(--radius-full)",
+                padding: "8px 16px",
                 display: "flex",
                 alignItems: "center",
-                gap: 16,
-                boxShadow: "0 10px 25px rgba(5, 150, 105, 0.4)",
-                border: "2px solid #34d399",
+                gap: 10,
+                boxShadow: "0 4px 15px rgba(5, 150, 105, 0.2)",
+                alignSelf: "center",
+                maxWidth: "fit-content",
               }}
             >
-              <div style={{ fontSize: 24 }}>🔊</div>
-              <div style={{ flex: 1 }}>
-                <p style={{ color: "white", fontWeight: 800, fontSize: 13, marginBottom: 2 }}>
-                  {lang === "en" ? "Azan is playing..." : "আজান চলছে..."}
-                </p>
-                <div style={{ display: "flex", gap: 3 }}>
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} style={{ width: 3, height: 12, background: "white", borderRadius: 2, animation: `music-bar 0.8s ease-in-out infinite alternate ${i * 0.1}s` }}></div>
-                  ))}
-                </div>
-              </div>
+              <span style={{ fontSize: 16 }}>🔊</span>
+              <p style={{ color: "white", fontWeight: 800, fontSize: 11 }}>
+                {lang === "en" ? "Azan is playing..." : "আজান চলছে..."}
+              </p>
             </div>
           )}
 
